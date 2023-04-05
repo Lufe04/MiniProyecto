@@ -2,3 +2,6 @@
 1234,Luisa,F,21
 1234,Fabian,M,23
 1234,Luisa,F,21
+1234,Jorge,M,34
+6789,Camilo,M,12
+4678,Camila,F,23

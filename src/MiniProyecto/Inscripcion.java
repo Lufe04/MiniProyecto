@@ -1,8 +1,8 @@
 package MiniProyecto;
-public class Inscripciones {
+public class Inscripcion {
     private String codAsi, codEst, nomAsi, nomEst, creditos;
 
-    public Inscripciones(String codAsi, String codEst, String nomAsi, String nomEst, String creditos) {
+    public Inscripcion(String codAsi, String codEst, String nomAsi, String nomEst, String creditos) {
         this.codAsi = codAsi;
         this.codEst = codEst;
         this.nomAsi = nomAsi;

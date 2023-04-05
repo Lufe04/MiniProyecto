@@ -13,7 +13,7 @@ public class GestionEstudiantes {
     private String ruta;
     //metodos
     public GestionEstudiantes(){
-       this.ruta= "./Archivos/Estudiantes.txt";
+       this.ruta= "./Archivos/estudiantes.txt";
        this.verificArchivo();   
     }
     private void verificArchivo() {
@@ -34,7 +34,7 @@ public class GestionEstudiantes {
         //datos estudiante
         cod=JOptionPane.showInputDialog("Digite el codigo del estudiante");
         String code = this.verificarCodigo(cod);
-        if (cod!= code) { 
+        if (!cod.equals(code)){ 
             nom=JOptionPane.showInputDialog("Digite el nombre del estudiante");
             gen=JOptionPane.showInputDialog("Digite el genero del estudiante: \nF para femenino\nM para masculino").toUpperCase().charAt(0);
             age=Integer.parseInt(JOptionPane.showInputDialog("Digite la edad del estudiante: "));
