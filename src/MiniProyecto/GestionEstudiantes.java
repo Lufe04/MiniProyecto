@@ -33,8 +33,8 @@ public class GestionEstudiantes {
         int age;
         //datos estudiante
         cod=JOptionPane.showInputDialog("Digite el codigo del estudiante");
-        this.verificarCodigo(cod);
-        if (cod != null) {
+        String code = this.verificarCodigo(cod);
+        if (cod!= code) { 
             nom=JOptionPane.showInputDialog("Digite el nombre del estudiante");
             gen=JOptionPane.showInputDialog("Digite el genero del estudiante: \nF para femenino\nM para masculino").toUpperCase().charAt(0);
             age=Integer.parseInt(JOptionPane.showInputDialog("Digite la edad del estudiante: "));
@@ -89,7 +89,6 @@ public class GestionEstudiantes {
         }
      }
        public ArrayList<Estudiante> getTodos(){
-        
         FileReader file;
         BufferedReader br;
         String registro;
@@ -163,6 +162,7 @@ public class GestionEstudiantes {
                 newcode=JOptionPane.showInputDialog("Inserte el nuevo nombre del estudiante: ");
                 stud.setNombre(newcode);
                 this.recargArchivo(students);
+                existe=true;
                 JOptionPane.showMessageDialog(null, "El nombre del estudiante ha sido modificado");
                 break;
             }
@@ -210,16 +210,18 @@ public class GestionEstudiantes {
         }
     }
      public void eliminarEstudiante (){
-         Estudiante stud  = buscarEstudiante();
-         if(stud != null){
-             ArrayList<Estudiante> students=this.getTodos();
-             students.remove(stud);
-             this.recargArchivo(students);
-             JOptionPane.showConfirmDialog(null, "El estudiante ha sido borrado con exito");
-         } else {
+        String code;
+        ArrayList<Estudiante> students=this.getTodos();
+        code=JOptionPane.showInputDialog("Digite el codigo del estudiante a buscar");
+        for (Estudiante stud: students) {
+            if (stud.getCodigo().equals(code)) {
+                students.remove(stud);
+                this.recargArchivo(students);
+                JOptionPane.showConfirmDialog(null, "El estudiante ha sido borrado con exito");
+            } else {
              JOptionPane.showConfirmDialog(null, "El estudiante con ese codigo no existe");
-         }
-        
+            }
+        }    
      }
      public Estudiante buscarEstudiante(){
         String code;
@@ -235,8 +237,8 @@ public class GestionEstudiantes {
             while((registro = br.readLine()) != null){
                 String [] tokens = registro.split(",");
                 if (tokens[0].equals(code)) {
-                    stud=new Estudiante(tokens[0],tokens[1],tokens[2].charAt(0),Integer.parseInt(tokens[3]));
                     existe=true;
+                    System.out.println(stud);// si encuentra el estudiante
                     break;
                 } 
             }
@@ -249,20 +251,20 @@ public class GestionEstudiantes {
         }
         return stud;
      }
-     private Estudiante verificarCodigo (String cod){
-        String code;
+     private String verificarCodigo (String cod){
+        String code = " ";
         boolean existe = false;
         FileReader file;
         BufferedReader br;
         String registro;
-        Estudiante codi=null;
-         try{
+        try{
             file= new FileReader(this.ruta);
             br= new BufferedReader(file);
             while((registro = br.readLine()) != null){
                 String [] tokens = registro.split(",");
                 if (tokens[0].equals(cod)) {
-                    codi=new Estudiante(tokens[0],tokens[1],tokens[2].charAt(0),Integer.parseInt(tokens[3]));
+                    code= tokens[0];
+                    System.out.println(code);
                     existe=true;
                     break;
                 } 
@@ -273,7 +275,7 @@ public class GestionEstudiantes {
         catch(IOException ex){
             System.out.println("Falló cargando estudiante"+ex);
         }
-        return codi;
+        return code;
      }
     }
 

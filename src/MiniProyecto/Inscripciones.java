@@ -52,7 +52,7 @@ public class Inscripciones {
 
     @Override
     public String toString() {
-        return this.codAsi+","+ this.codEst+","+this.nomAsi+","+this.nomEst+","+this.creditos;
+        return this.codAsi+","+this.nomAsi+","+this.creditos+","+this.codEst+","+this.nomEst;
     }
     
     

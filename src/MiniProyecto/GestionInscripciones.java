@@ -12,24 +12,24 @@ import javax.swing.JOptionPane;
 public class GestionInscripciones {
     String ruta;
     String rutaEst;
+    String rutaAs;
     private void GestionInscripciones(){
         this.ruta= "./Archivos/Inscripciones.txt";
         this.rutaEst="./Archivos/Estudiantes.txt";
+        this.rutaAs="../Asignaturas/Asignaturas.txt";
         
     }
     public void crearInscripcion (){
-            ArrayList <String> inscripciones = new ArrayList();
-            String idest= this.verificarCodigoEst();
-            System.out.println(idest);
-            /*while (idest == null){
-                idest = this.verificarCodigoEst();
-            }*/
+        ArrayList<Inscripciones> inscripcion = new ArrayList();
+        String codeEst= this.verificarCodigoEst();
+        String codeAs=this.verificarCodigoAsig();
+        if(codeEst != null && codeAs!=null){
+            ArrayList<Asignatura> asignatura = this.getTodosAs();
+            ArrayList<Estudiante> estudiante = this.getTodosEst();
             
-            /*String idasi=this.verificarCodigoEInscribirAsig(idest);
-            while (idasi == null){
-                idasi = this.verificarCodigoEInscribirAsig(idest);
-            }  */   
         }
+              
+    }
     private void recargArchivo (ArrayList<Asignatura> asignaturas){
         File file;
         FileWriter fr;
@@ -47,7 +47,7 @@ public class GestionInscripciones {
             System.out.println("No se pudo crear el estudiante"+ex);
         }
      }
-    public ArrayList<Asignatura> getTodos(){
+    public ArrayList<Asignatura> getTodosAs(){
         FileReader file;
         BufferedReader br;
         String registro;
@@ -69,27 +69,22 @@ public class GestionInscripciones {
         }
         return asi;
     }
-    private String verificarCodigoAsig (String idest){
-        JOptionPane.showInputDialog("Ingrese el codigo de la asignatura: ");
-        return " ";
-     }
-    private String verificarCodigoEst (){
-        String idest=JOptionPane.showInputDialog("Ingrese el codigo del estudiante: ");
-        System.out.println(idest);
+    
+    private String verificarCodigoAsig (){
+        String code = JOptionPane.showInputDialog("Ingrese el codigo de la asignatura: ");
+        String codeAs = "";
         boolean existe = false;
         FileReader file;
         BufferedReader br;
         String registro;
         try{
-            System.out.println("before try");
-            file= new FileReader(this.rutaEst);      
-            System.out.println("before t333");
+            file= new FileReader(this.rutaAs);
             br= new BufferedReader(file);
             while((registro = br.readLine()) != null){
-                System.out.println("while");
                 String [] tokens = registro.split(",");
-                if (tokens[0].equals(idest)) {
-                    idest=tokens[0];
+                if (tokens[0].equals(code)) {
+                    codeAs= tokens[0];
+                    System.out.println(codeAs);
                     existe=true;
                     break;
                 } 
@@ -100,6 +95,57 @@ public class GestionInscripciones {
         catch(IOException ex){
             System.out.println("Falló cargando estudiante"+ex);
         }
-        return idest;
+        return codeAs;
+     }
+    
+    public ArrayList<Estudiante> getTodosEst(){
+        FileReader file;
+        BufferedReader br;
+        String registro;
+        Estudiante stud=null;
+        ArrayList<Estudiante> students=new ArrayList();
+        try{
+            file= new FileReader(this.ruta);
+            br= new BufferedReader(file);
+            while((registro = br.readLine()) != null){
+                String [] tokens = registro.split(",");
+                for (int i = 0; i < 1; i++) {
+                    stud=new Estudiante(tokens[0],tokens[1],tokens[2].charAt(0),Integer.parseInt(tokens[3]));
+                    students.add(stud); 
+                }    
+            }    
+        }
+        catch(IOException ex){
+            System.out.println("Falló cargando estudiante"+ex);
+        }
+        return students;
+    }
+     
+    private String verificarCodigoEst (){
+        String cod= JOptionPane.showInputDialog("Ingrese el codigo del estudiante a inscribir: ");
+        String codeEst = " ";
+        boolean existe = false;
+        FileReader file;
+        BufferedReader br;
+        String registro;
+        try{
+            file= new FileReader(this.rutaEst);
+            br= new BufferedReader(file);
+            while((registro = br.readLine()) != null){
+                String [] tokens = registro.split(",");
+                if (tokens[0].equals(cod)) {
+                    codeEst= tokens[0];
+                    System.out.println(codeEst);
+                    existe=true;
+                    break;
+                } 
+            }
+            if(!existe)
+                JOptionPane.showMessageDialog(null, "Ese codigo no existe");
+        }
+        catch(IOException ex){
+            System.out.println("Falló cargando estudiante"+ex);
+        }
+        return codeEst;
      }
 }
