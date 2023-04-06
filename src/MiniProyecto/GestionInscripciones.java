@@ -18,17 +18,95 @@ public class GestionInscripciones {
         this.ruta= "./Archivos/Inscripciones.txt";
         this.rutaEst= "./Archivos/estudiantes.txt";
         this.rutaAs="./Asignaturas/Asignaturas.txt";
-        
+        this.verificArchivo();
     }
-    public void crearInscripcion (){
-        ArrayList<Inscripcion> inscripciones = new ArrayList();
-        Estudiante est= this.buscarEst();
-        Asignatura as=this.buscarAsig();
-        if(est != null && as!=null){
-            Inscripcion ins= new Inscripcion (as.getCodigo(),as.getNombre(),as.getCreditos(),est.getCodigo(),est.getNombre());
-            System.out.println(ins);
+    private void verificArchivo() {
+        try{
+            File filex = new File(this.ruta); //revisa que la ruta este bien
+            if(!filex.exists()) //si no existe el archivo
+                filex.createNewFile();// lo crea, si ya esta creado pues no hace nada.  
+        }
+        catch (IOException ex){
+            System.out.println("Problemas con la ruta");
+            //ex.printStackTrace(); --> deja una ahoja de ruta de los errores que hay 
         }
     }
+    public void crearInscripcion (){
+       Estudiante est= this.buscarEst();
+        Asignatura as=this.buscarAsig();
+        if(est != null && as!=null){
+            Inscripcion ins= new Inscripcion (as.getCodigo(),as.getNombre(),as.getCreditos(),est.getCodigo(),est.getNombre(),".",".",".");
+            this.guardaInscripcion(ins);
+        }
+    }
+    private void guardaInscripcion(Inscripcion ins){
+        File file;
+        FileWriter fr;
+        PrintWriter pw;
+        try{
+            file=new File(this.ruta);
+            fr = new FileWriter(file, true);//prepara la escritura, recibe el , el booleano true: agraga al final del archivo, false: borra el archivo e inicia de nuevo
+                pw = new PrintWriter(fr);
+            pw.println(ins);
+            pw.close();
+        }
+        catch (IOException ex){
+            System.out.println("No se pudo crear el estudiante"+ex);
+        }
+    }
+    public void verIncripcion(){
+        boolean existe = false;
+        String code;
+        FileReader file;
+        BufferedReader br;
+        String registro;
+        int opc = Integer.parseInt(JOptionPane.showInputDialog("¿Cómo desea ver las inscripciones?\n1. Por alumno\n2. Por asignatura"));
+        switch (opc){
+            case 1:
+                code=JOptionPane.showInputDialog("Digite el codigo del estudiante a buscar");
+                try{
+                    file= new FileReader(this.ruta);
+                    br= new BufferedReader(file);
+                    while((registro = br.readLine()) != null){
+                        String [] tokens = registro.split(",");
+                        if (tokens[4].equals(code)) {
+                            System.out.println(registro);
+                            System.out.println("===============================================");
+                            existe=true;
+                            break;
+                        } 
+                    }
+                    if(!existe)
+                        JOptionPane.showMessageDialog(null, "Ese codigo no existe");
+                }
+                catch(IOException ex){
+                    System.out.println("Falló cargando la inscripción"+ex);
+                }
+            case 2:
+                code=JOptionPane.showInputDialog("Digite el codigo de la asignatura a buscar");
+                try{
+                    file= new FileReader(this.ruta);
+                    br= new BufferedReader(file);
+                    while((registro = br.readLine()) != null){
+                        String [] tokens = registro.split(",");
+                        if (tokens[0].equals(code)) {
+                            System.out.println(registro);
+                            System.out.println("===============================================");
+                            existe=true;
+                            break;
+                        } 
+                    }
+                    if(!existe)
+                        JOptionPane.showMessageDialog(null, "Ese codigo no existe");
+                }
+                catch(IOException ex){
+                    System.out.println("Falló cargando la inscripción"+ex);
+                }
+        }
+        
+        
+    }
+    
     private void recargArchivo (ArrayList<Asignatura> asignaturas){
         File file;
         FileWriter fr;
